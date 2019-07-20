@@ -1,5 +1,6 @@
 package com.scheduler.scheduler.controller
 
+import com.scheduler.scheduler.Domain.AssignmentWithShift
 import com.scheduler.scheduler.Domain.Assignment
 import com.scheduler.scheduler.Domain.ShiftWithAvailability
 import com.scheduler.scheduler.Repository.AssignmentRepository
@@ -27,6 +28,16 @@ class ScheduleController(val scheduleRepo: ScheduleRepository, val assignmentRep
     @DeleteMapping("/assignment/{id}")
     fun deleteAssignment(@PathVariable id: Long) {
         assignmentRepo.deleteById(id)
+    }
+
+    @GetMapping("/assignment")
+    fun getAssignmentByEmail(@RequestParam email: String): List<AssignmentWithShift> {
+        val assignments = assignmentRepo.findAllByEmail(email)
+
+        return assignments.map { assignment ->
+            val shift = scheduleRepo.findById(assignment.shiftId)
+            AssignmentWithShift(assignment, shift.get())
+        }
     }
 
 
