@@ -5,10 +5,15 @@ import com.scheduler.scheduler.Domain.Assignment
 import com.scheduler.scheduler.Domain.ShiftWithAvailability
 import com.scheduler.scheduler.Repository.AssignmentRepository
 import com.scheduler.scheduler.Repository.ScheduleRepository
+import com.scheduler.scheduler.Repository.VolunteerRepository
 import org.springframework.web.bind.annotation.*
 
 @RestController
-class ScheduleController(val scheduleRepo: ScheduleRepository, val assignmentRepo: AssignmentRepository) {
+class ScheduleController(
+        val scheduleRepo: ScheduleRepository,
+        val assignmentRepo: AssignmentRepository,
+        val volunteerRepo: VolunteerRepository
+) {
 
     @GetMapping("/shifts")
     fun getShifts(): List<ShiftWithAvailability> {
@@ -40,6 +45,10 @@ class ScheduleController(val scheduleRepo: ScheduleRepository, val assignmentRep
         }
     }
 
+    @GetMapping("/volunteer")
+    fun isVolunteer(@RequestParam email: String): Boolean {
+        val volunteer = volunteerRepo.findById(email)
 
-    //todo  delete a persons entire assignment
+       return volunteer.isPresent
+    }
 }
