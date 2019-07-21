@@ -9,6 +9,7 @@ import com.scheduler.scheduler.Repository.VolunteerRepository
 import org.springframework.web.bind.annotation.*
 
 @RestController
+@RequestMapping("/api")
 class ScheduleController(
         val scheduleRepo: ScheduleRepository,
         val assignmentRepo: AssignmentRepository,

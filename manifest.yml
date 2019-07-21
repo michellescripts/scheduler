@@ -1,0 +1,11 @@
+---
+applications:
+  - name: scheduler
+    memory: 1G
+    routes:
+    - route: volunteer.apps.pcfone.io/api
+    path: build/libs/scheduler-0.0.1-SNAPSHOT.jar
+    services:
+    - scheduler
+    buildpacks:
+    - java_buildpack_offline
