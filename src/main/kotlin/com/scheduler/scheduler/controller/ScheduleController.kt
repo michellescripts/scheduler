@@ -8,6 +8,7 @@ import com.scheduler.scheduler.Repository.ScheduleRepository
 import com.scheduler.scheduler.Repository.VolunteerRepository
 import org.springframework.web.bind.annotation.*
 
+@CrossOrigin(origins = ["https://volunteer-admin.apps.pcfone.io"])
 @RestController
 @RequestMapping("/api")
 class ScheduleController(
@@ -36,7 +37,7 @@ class ScheduleController(
         assignmentRepo.deleteById(id)
     }
 
-    @GetMapping("/assignment")
+    @GetMapping("/assignment", params = ["email"])
     fun getAssignmentByEmail(@RequestParam email: String): List<AssignmentWithShift> {
         val assignments = assignmentRepo.findAllByEmail(email)
 
@@ -44,6 +45,13 @@ class ScheduleController(
             val shift = scheduleRepo.findById(assignment.shiftId)
             AssignmentWithShift(assignment, shift.get())
         }
+    }
+
+    @GetMapping("/assignment", params = ["shiftId"])
+    fun getAssignmentByShift(@RequestParam shiftId: String): Iterable<Assignment> {
+        val assignments = assignmentRepo.findAllByShiftId(shiftId.toLong())
+
+        return assignments
     }
 
     @GetMapping("/volunteer")
