@@ -2,10 +2,12 @@ package com.scheduler.scheduler.controller
 
 import com.scheduler.scheduler.Domain.AssignmentWithShift
 import com.scheduler.scheduler.Domain.Assignment
+import com.scheduler.scheduler.Domain.AssignmentWithVolunteer
 import com.scheduler.scheduler.Domain.ShiftWithAvailability
 import com.scheduler.scheduler.Repository.AssignmentRepository
 import com.scheduler.scheduler.Repository.ScheduleRepository
 import com.scheduler.scheduler.Repository.VolunteerRepository
+import org.springframework.expression.spel.ast.Assign
 import org.springframework.web.bind.annotation.*
 
 @CrossOrigin(origins = ["https://volunteer-admin.apps.pcfone.io"])
@@ -48,10 +50,13 @@ class ScheduleController(
     }
 
     @GetMapping("/assignment", params = ["shiftId"])
-    fun getAssignmentByShift(@RequestParam shiftId: String): Iterable<Assignment> {
+    fun getAssignmentByShift(@RequestParam shiftId: String): Iterable<AssignmentWithVolunteer> {
         val assignments = assignmentRepo.findAllByShiftId(shiftId.toLong())
 
-        return assignments
+        return assignments.map { assignment ->
+            val volunteer = volunteerRepo.findById(assignment.email)
+            AssignmentWithVolunteer(assignment, volunteer.get())
+        }
     }
 
     @GetMapping("/volunteer")

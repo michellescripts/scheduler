@@ -6,9 +6,15 @@ import javax.persistence.Entity
 import javax.persistence.Id
 
 @Entity
-class Volunteer {
+data class Volunteer (
     @Id
     @Column(name="email")
     @NotNull
-    val email: String = ""
-}
+    val email: String = "",
+
+    @Column(name="first_name")
+    val firstName: String="",
+
+    @Column(name="last_name")
+    val lastName: String=""
+)
