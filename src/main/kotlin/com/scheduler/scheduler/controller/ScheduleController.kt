@@ -1,9 +1,6 @@
 package com.scheduler.scheduler.controller
 
-import com.scheduler.scheduler.Domain.AssignmentWithShift
-import com.scheduler.scheduler.Domain.Assignment
-import com.scheduler.scheduler.Domain.AssignmentWithVolunteer
-import com.scheduler.scheduler.Domain.ShiftWithAvailability
+import com.scheduler.scheduler.Domain.*
 import com.scheduler.scheduler.Repository.AssignmentRepository
 import com.scheduler.scheduler.Repository.ScheduleRepository
 import com.scheduler.scheduler.Repository.VolunteerRepository
@@ -64,5 +61,15 @@ class ScheduleController(
         val volunteer = volunteerRepo.findById(email)
 
        return volunteer.isPresent
+    }
+
+    @GetMapping("/volunteerAssignments")
+    fun getAllVolunteersAndShifts(): Iterable<VolunteerWithAssignment> {
+        val volunteers = volunteerRepo.findAll()
+
+        return volunteers.map { volunteer ->
+            val shifts = assignmentRepo.findAllByEmail(volunteer.email)
+            VolunteerWithAssignment(volunteer, shifts)
+        }
     }
 }
